@@ -6,7 +6,6 @@ import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({ navigation }) {
-  const [cartItems, setCartItems] = useState([]);
   const [searchText, setSearchText] = useState('');
 
   const [data, setData] = useState([]);
