@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import Setting from './src/components/navigations/Setting';
 import TopTab from './src/tab/TopTab';
 import Orderdetail from './src/components/OrderDetail';
+import Cart from './src/components/Cart';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +43,7 @@ export default function App() {
             <Stack.Screen name="Setting" component={Setting} />
             <Stack.Screen name="Order" component={TopTab} />
             <Stack.Screen name="OrderDetail" component={Orderdetail} />
+            <Stack.Screen name="Cart" component={Cart} />
           </>
         ) : (
           <>

@@ -10,37 +10,63 @@ const OrderDetail = ({ navigation , route }) => {
   const [data, setData] = useState([])
   const [isLoading, setLoading] = useState(true)
   useEffect(() => {
-    const getData = async () => {
-      const form = {_id: item._id};
+    getData()
+  }, [])
+  const getData = async () => {
+      const form = {_id: item.order._id};
       const response = await axios.post(apiweb + '/getorderdetail',form, {
           headers: {
             'token': await AsyncStorage.getItem('token')
           }
         });
-      setData(response.data.order[0]);
+      setData(response.data.order);
       setLoading(false)
     }
-    getData()
-  }, [])
-  
   const checkStatus = () => {
     if (data.status === 'Đơn hàng đã bị hủy' || data.status === 'Đã nhận hàng') {
       return null
     } else if (data.status === 'Chờ xác nhận') {
       return (
         <View>
-          <Button title="Hủy đơn hàng" />
+          <Button title="Hủy đơn hàng" onPress={() => huyDonHang()} />
         </View>
       )
     } else {
       <View>
-          <Button title="Nhận hàng" />
+          <Button title="Nhận hàng" onPress={()=>nhanHang()} />
       </View>
     }
   }
+  const huyDonHang = async () => {
+    setLoading(true)
+    const form = {_id: item.order._id};
+    await axios.post(apiweb + '/huydonhang', form, {
+      headers: {
+            'token': await AsyncStorage.getItem('token')
+          }
+    }).then(() => {
+      getData();
+      setLoading(false);
+    })
+  }
+  const nhanHang = async () => {
+    setLoading(true)
+    const form = {_id: item.order._id};
+    await axios.post(apiweb + '/nhanhang', form, {
+      headers: {
+            'token': await AsyncStorage.getItem('token')
+          }
+    }).then(() => {
+      getData();
+      setLoading(false);
+    })
+  }
   if (isLoading) {
     return (
-      <Text style={{margin: 20,alignItems: "center"}}>IsLoading...</Text>
+      <ActivityIndicator style={{
+        flex: 1,
+        justifyContent: 'center',
+      }} size="large" />
     )
   }
   return (

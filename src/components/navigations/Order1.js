@@ -52,7 +52,6 @@ export default Order1 = ({navigation}) => {
             }}
           >
           <View style={styles.orderItem}>
-            {/* Add an image here if your data structure includes it */}
             <View style={styles.orderInfo}>
               <Text style={styles.productName}>{item._id}</Text>
               <Text >Số lượng sản phẩm: {item.products.length}</Text>

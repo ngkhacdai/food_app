@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Text, Image, TouchableOpacity, StyleSheet , Modal, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons'; // Sử dụng icon Back
-import { local } from '../api/index';
+import { apiweb} from '../api/index';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -16,8 +16,15 @@ export default ProductDetail = ({ navigation, route }) => {
   }
   return text;
 }
-  const handleAddToCart = () => {
-    // Xử lý logic thêm sản phẩm vào giỏ hàng với số lượng là `quantity`
+  const handleAddToCart = async () => {
+    const form = {_id: product._id}
+    axios.post(apiweb + '/addtocart', form, {
+      headers: {
+            'token': await AsyncStorage.getItem('token')
+          }
+    }).then(() => {
+      Alert.alert('Thêm vào giỏ hàng thành công')
+    })
   };
 
   const handleBuyNow = () => {
@@ -30,7 +37,7 @@ export default ProductDetail = ({ navigation, route }) => {
       price: product.price,
       quantity: quantity
     }
-    await axios.post(local + '/payoneproduct', form, {
+    await axios.post(apiweb + '/payoneproduct', form, {
       headers: {
             'token': await AsyncStorage.getItem('token')
       }
