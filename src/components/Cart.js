@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View, Text, FlatList, Button, StyleSheet, Image } from 'react-native';
-import { local } from '../api/index';
+import { local, apiweb } from '../api/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Cart = ({navigation}) => {
@@ -13,7 +13,7 @@ const Cart = ({navigation}) => {
   }, []);
 
   const getData = async () => {
-    axios.get(local + '/getitemincart', {
+    axios.get(apiweb + '/getitemincart', {
       headers: {
         'token': await AsyncStorage.getItem('token')
       }
@@ -29,7 +29,7 @@ const Cart = ({navigation}) => {
     const form = {
       _id: productId
     }
-    await axios.post(local+'/removefromcart', form, {
+    await axios.post(apiweb+'/removefromcart', form, {
       headers: {
         'token': await AsyncStorage.getItem('token')
       }
@@ -43,7 +43,7 @@ const Cart = ({navigation}) => {
         const form = {
           _id: productId
         }
-        axios.post(local + '/increasequantity', form, {
+        axios.post(apiweb + '/increasequantity', form, {
           headers: {
             'token': await AsyncStorage.getItem('token')
           }
@@ -58,7 +58,7 @@ const Cart = ({navigation}) => {
         const form = {
           _id: productId
         }
-        axios.post(local + '/decreasequantity', form, {
+        axios.post(apiweb + '/decreasequantity', form, {
           headers: {
             'token': await AsyncStorage.getItem('token')
           }
@@ -69,7 +69,7 @@ const Cart = ({navigation}) => {
   };
   const thanhToan = async () => {
     setIsLoading(true)
-    axios.get(local + '/payincart', {
+    axios.get(apiweb + '/payincart', {
           headers: {
             'token': await AsyncStorage.getItem('token')
           }
