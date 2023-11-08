@@ -46,9 +46,9 @@ const ChatScreen = () => {
   })
   const getBotResponse = (userMessage) => {
     if (userMessage.toLowerCase().includes('xin chào')) {
-      return 'Xin chào! Tôi là chatbot đơn giản.';
+      return 'Xin chào! Tôi là chatbot.';
     } else {
-      return 'Xin lỗi, tôi không hiểu. Vui lòng thử lại.';
+      return 'Chờ người phản hồi';
     };
   }
   return (

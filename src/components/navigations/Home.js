@@ -1,30 +1,37 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import {apiweb} from '../../api/index'
+import { apiweb } from '../../api/index';
 import { useIsFocused } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({ navigation }) {
   const [searchText, setSearchText] = useState('');
-
+  const [searchResults, setSearchResults] = useState([]);
   const [data, setData] = useState([]);
-  
+
   useEffect(() => {
-    getData()
-  },[useIsFocused()])
+    getData();
+  }, [useIsFocused()]);
+
   const getData = () => {
     axios.get(apiweb + '/getallproduct').then((res) => {
-      setData(res.data)
-    })
-  }
+      setData(res.data);
+    });
+  };
+
+  const handleSearch = (text) => {
+    const filteredData = data.filter((item) => item.name.toLowerCase().includes(text.toLowerCase()));
+    setSearchResults(filteredData);
+    setSearchText(text);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TextInput
           placeholder="Tìm kiếm sản phẩm..."
           value={searchText}
-          onChangeText={setSearchText}
+          onChangeText={(text) => handleSearch(text)}
           style={styles.searchInput}
         />
         <TouchableOpacity
@@ -35,10 +42,12 @@ function Home({ navigation }) {
         </TouchableOpacity>
       </View>
       <FlatList
-        data={data}
+        data={searchResults.length > 0 ? searchResults : data}
         keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => (
-          <View style={(index + 1) % 2 === 0 ? styles.productCard : styles.singleColumn}>
+          <View
+            style={(index + 1) % 2 === 0 ? styles.productCard : styles.singleColumn}
+          >
             <TouchableOpacity
               onPress={() => navigation.navigate('ProductDetail', { product: item })}
             >
@@ -119,6 +128,11 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 14,
     color: 'green',
+  },
+  noResultsText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 16,
   },
 });
 
