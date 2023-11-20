@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, Text, Image, StyleSheet } from 'react-native';
+import { View, FlatList, Text, Image, StyleSheet , TouchableOpacity } from 'react-native';
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import { apiweb } from "../../api/index";

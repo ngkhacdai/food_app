@@ -5,6 +5,7 @@ import { apiweb, local } from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from '@expo/vector-icons'; // Sử dụng icon Back
 import { useIsFocused } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native";
 const OrderDetail = ({ navigation , route }) => {
   const item = route.params;
   const [data, setData] = useState([])
