@@ -4,7 +4,7 @@ import { ActivityIndicator, View, Text, FlatList, Button, StyleSheet, Image } fr
 import { local, apiweb } from '../api/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Cart = ({navigation}) => {
+const Cart = ({ navigation }) => {
   const [cartItems, setCartItems] = useState([]);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -13,7 +13,7 @@ const Cart = ({navigation}) => {
   }, []);
 
   const getData = async () => {
-    axios.get(apiweb + '/getitemincart', {
+    axios.get(apiweb + '/cart/getitemincart', {
       headers: {
         'token': await AsyncStorage.getItem('token')
       }
@@ -29,7 +29,7 @@ const Cart = ({navigation}) => {
     const form = {
       _id: productId
     }
-    await axios.post(apiweb+'/removefromcart', form, {
+    await axios.post(apiweb + '/cart/removefromcart', form, {
       headers: {
         'token': await AsyncStorage.getItem('token')
       }
@@ -38,44 +38,44 @@ const Cart = ({navigation}) => {
     })
   };
 
-  const increaseQuantity = async (productId,quantity) => {
+  const increaseQuantity = async (productId, quantity) => {
     setIsLoading(true)
-        const form = {
-          _id: productId
-        }
-        axios.post(apiweb + '/increasequantity', form, {
-          headers: {
-            'token': await AsyncStorage.getItem('token')
-          }
-        }).then(() => {
-          getData()
-        })
+    const form = {
+      _id: productId
+    }
+    axios.post(apiweb + '/cart/increasequantity', form, {
+      headers: {
+        'token': await AsyncStorage.getItem('token')
+      }
+    }).then(() => {
+      getData()
+    })
   };
 
   const decreaseQuantity = async (productId, quantity) => {
     if (quantity > 1) {
-        setIsLoading(true)
-        const form = {
-          _id: productId
-        }
-        axios.post(apiweb + '/decreasequantity', form, {
-          headers: {
-            'token': await AsyncStorage.getItem('token')
-          }
-        }).then(() => {
-          getData()
-        })
+      setIsLoading(true)
+      const form = {
+        _id: productId
       }
+      axios.post(apiweb + '/cart/decreasequantity', form, {
+        headers: {
+          'token': await AsyncStorage.getItem('token')
+        }
+      }).then(() => {
+        getData()
+      })
+    }
   };
   const thanhToan = async () => {
     setIsLoading(true)
-    axios.get(apiweb + '/payincart', {
-          headers: {
-            'token': await AsyncStorage.getItem('token')
-          }
-        }).then(() => {
-          getData()
-        })
+    axios.get(apiweb + '/order/payincart', {
+      headers: {
+        'token': await AsyncStorage.getItem('token')
+      }
+    }).then(() => {
+      getData()
+    })
   }
   if (isLoading) {
     return (
@@ -94,16 +94,16 @@ const Cart = ({navigation}) => {
         renderItem={({ item }) => (
           <View style={styles.cartItem}>
             <Image
-              source={{ uri: `data:${item.product.image.contentType};base64,${item.product.image.data}` }}
+              source={{ uri: `${apiweb}/${item.image}` }}
               style={styles.productImage}
             />
             <View style={styles.productInfo}>
               <Text>{item.product.name}</Text>
               <Text>Price: {item.product.price}đ</Text>
               <View style={styles.quantityContainer}>
-                <Button title="-" onPress={() => decreaseQuantity(item.product._id,item.quantity)} style={styles.quantityButton} />
+                <Button title="-" onPress={() => decreaseQuantity(item.product._id, item.quantity)} style={styles.quantityButton} />
                 <Text style={styles.quantityText}>{item.quantity}</Text>
-                <Button title="+" onPress={() => increaseQuantity(item.product._id,item.quantity)} style={styles.quantityButton} />
+                <Button title="+" onPress={() => increaseQuantity(item.product._id, item.quantity)} style={styles.quantityButton} />
               </View>
               <Button title="Xóa" onPress={() => removeFromCart(item.product._id)} />
             </View>
@@ -112,7 +112,7 @@ const Cart = ({navigation}) => {
       />
       <View style={styles.checkoutContainer}>
         <Text style={styles.total}>Total: {data.total}đ</Text>
-        <Button title="Thanh toán" onPress={()=> {thanhToan()}} style={styles.checkoutButton} />
+        <Button title="Thanh toán" onPress={() => { thanhToan() }} style={styles.checkoutButton} />
       </View>
     </View>
   );

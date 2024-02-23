@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, FlatList , TouchableOpacity , Image} from "react-native";
-import { apiweb, local } from "../api";
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity, Image } from "react-native";
+import { apiweb, img } from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from '@expo/vector-icons'; // Sử dụng icon Back
 import { useIsFocused } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native";
-const OrderDetail = ({ navigation , route }) => {
+const OrderDetail = ({ navigation, route }) => {
   const item = route.params;
   const [data, setData] = useState([])
   const [isLoading, setLoading] = useState(true)
@@ -14,15 +14,15 @@ const OrderDetail = ({ navigation , route }) => {
     getData()
   }, [])
   const getData = async () => {
-      const form = {_id: item.order._id};
-      const response = await axios.post(apiweb + '/getorderdetail',form, {
-          headers: {
-            'token': await AsyncStorage.getItem('token')
-          }
-        });
-      setData(response.data.order);
-      setLoading(false)
-    }
+    const form = { _id: item.order._id };
+    const response = await axios.post(apiweb + '/order/getorderdetail', form, {
+      headers: {
+        'token': await AsyncStorage.getItem('token')
+      }
+    });
+    setData(response.data.order);
+    setLoading(false)
+  }
   const checkStatus = () => {
     if (data.status === 'Đơn hàng đã bị hủy' || data.status === 'Đã nhận hàng') {
       return null
@@ -34,17 +34,17 @@ const OrderDetail = ({ navigation , route }) => {
       )
     } else {
       <View>
-          <Button title="Nhận hàng" onPress={()=>nhanHang()} />
+        <Button title="Nhận hàng" onPress={() => nhanHang()} />
       </View>
     }
   }
   const huyDonHang = async () => {
     setLoading(true)
-    const form = {_id: item.order._id};
-    await axios.post(apiweb + '/huydonhang', form, {
+    const form = { _id: item.order._id };
+    await axios.post(apiweb + '/order/huydonhang', form, {
       headers: {
-            'token': await AsyncStorage.getItem('token')
-          }
+        'token': await AsyncStorage.getItem('token')
+      }
     }).then(() => {
       getData();
       setLoading(false);
@@ -52,11 +52,11 @@ const OrderDetail = ({ navigation , route }) => {
   }
   const nhanHang = async () => {
     setLoading(true)
-    const form = {_id: item.order._id};
-    await axios.post(apiweb + '/nhanhang', form, {
+    const form = { _id: item.order._id };
+    await axios.post(apiweb + '/order/nhanhang', form, {
       headers: {
-            'token': await AsyncStorage.getItem('token')
-          }
+        'token': await AsyncStorage.getItem('token')
+      }
     }).then(() => {
       getData();
       setLoading(false);
@@ -93,14 +93,14 @@ const OrderDetail = ({ navigation , route }) => {
           keyExtractor={(item, index) => `${item.name}_${index}`}
           renderItem={({ item }) => (
             <View style={styles.productItem}>
-              <Image source={{ uri: `data:${item.product.image.contentType};base64,${item.product.image.data}` }} style={styles.productImage} />
+              <Image source={{ uri: `${img}/${item.product.image.replace(/\\/g, '/')}` }} style={styles.productImage} />
               <View style={styles.productInfo}>
-                <Text style={{fontWeight: "bold" , fontSize: 16}}>{item.product.name}</Text>
+                <Text style={{ fontWeight: "bold", fontSize: 16 }}>{item.product.name}</Text>
                 <Text>Quantity: {item.quantity}</Text>
                 <Text>Price: {item.product.price}đ</Text>
                 <Text>Tổng tiền: {item.price}đ</Text>
               </View>
-              
+
             </View>
           )}
         />
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   orderSummary: {},
   productInfo: {
     marginLeft: 10,
-    
+
   },
   productImage: {
     width: 80,

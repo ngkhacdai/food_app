@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { apiweb } from '../../api/index';
+import { apiweb, img } from '../../api/index';
 import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home({ navigation }) {
   const [searchText, setSearchText] = useState('');
@@ -13,8 +14,12 @@ function Home({ navigation }) {
     getData();
   }, [useIsFocused()]);
 
-  const getData = () => {
-    axios.get(apiweb + '/getallproduct').then((res) => {
+  const getData = async () => {
+    axios.get(apiweb + '/product/getallproduct', {
+      headers: {
+        'token': await AsyncStorage.getItem('token')
+      }
+    }).then((res) => {
       setData(res.data);
     });
   };
@@ -51,7 +56,7 @@ function Home({ navigation }) {
             <TouchableOpacity
               onPress={() => navigation.navigate('ProductDetail', { product: item })}
             >
-              <Image source={{ uri: `data:${item.image.contentType};base64,${item.image.data}` }} style={styles.productImage} />
+              <Image source={{ uri: `${img}/${item.image.replace(/\\/g, '/')}` }} style={styles.productImage} />
               <Text style={styles.productName}>{item.name}</Text>
               <Text style={styles.productPrice}>{item.price}đ</Text>
             </TouchableOpacity>

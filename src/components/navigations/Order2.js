@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, Text, Image, StyleSheet , TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import { apiweb } from "../../api/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default Order1 = ({navigation}) => {
+export default Order1 = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [order, setOrder] = useState([]);
 
   useEffect(() => {
     async function getData() {
       try {
-        const response = await axios.get(apiweb + '/getallorderbyuser', {
+        const response = await axios.get(apiweb + '/order/getallorderbyuser', {
           headers: {
             'token': await AsyncStorage.getItem('token')
           }
@@ -46,15 +46,15 @@ export default Order1 = ({navigation}) => {
               navigation.navigate("OrderDetail", { order: item });
             }}
           >
-          <View style={styles.orderItem}>
-            {/* Add an image here if your data structure includes it */}
-            <View style={styles.orderInfo}>
-              <Text style={styles.productName}>{item._id}</Text>
-              <Text >Số lượng sản phẩm: {item.products.length}</Text>
-              <Text>Tổng cộng: {item.totalPrice}đ</Text>
-              <Text>Trạng thái đơn hàng: {item.status}</Text>
+            <View style={styles.orderItem}>
+              {/* Add an image here if your data structure includes it */}
+              <View style={styles.orderInfo}>
+                <Text style={styles.productName}>{item._id}</Text>
+                <Text >Số lượng sản phẩm: {item.products.length}</Text>
+                <Text>Tổng cộng: {item.totalPrice}đ</Text>
+                <Text>Trạng thái đơn hàng: {item.status}</Text>
+              </View>
             </View>
-          </View>
           </TouchableOpacity>
         )}
       />

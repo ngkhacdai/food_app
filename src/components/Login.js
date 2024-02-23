@@ -11,9 +11,9 @@ const Login = ({ navigation }) => {
 
   const handleLogin = () => {
     const form = {
-      email,password
+      email, password
     }
-    axios.post(apiweb + '/login', form).then(async (res) => {
+    axios.post(apiweb + '/access/login', form).then(async (res) => {
       if (res.data.status === 200) {
         AsyncStorage.setItem('token', res.data.token)
         NativeModules.DevSettings.reload();

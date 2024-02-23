@@ -6,17 +6,17 @@ import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BlogScreen = () => {
-    const [blog, setBlog] = useState([]);
-    useEffect(() => {
-        getData()
-    },[useIsFocused()])
-    const getData = async () => {
-        axios.get(apiweb + '/getallblog', {
-            headers: {
-                'token': await AsyncStorage.getItem('token')
-            }
-        }).then((res) => setBlog(res.data.blog))
-    }
+  const [blog, setBlog] = useState([]);
+  useEffect(() => {
+    getData()
+  }, [useIsFocused()])
+  const getData = async () => {
+    axios.get(apiweb + '/blog/getallblog', {
+      headers: {
+        'token': await AsyncStorage.getItem('token')
+      }
+    }).then((res) => setBlog(res.data.blog))
+  }
   return (
     <View style={styles.container}>
       <FlatList

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, ScrollView, Text, Image, TouchableOpacity, StyleSheet , Modal, Alert } from 'react-native';
+import { View, ScrollView, Text, Image, TouchableOpacity, StyleSheet, Modal, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons'; // Sử dụng icon Back
-import { apiweb} from '../api/index';
+import { apiweb, img } from '../api/index';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -11,17 +11,17 @@ export default ProductDetail = ({ navigation, route }) => {
   const [quantity, setQuantity] = useState(1);
 
   function truncateText(text, maxLength) {
-  if (text.length > maxLength) {
-    return text.slice(0, maxLength) + '...'; // Cắt tên sản phẩm nếu vượt quá maxLength và thêm dấu '...' ở cuối
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + '...'; // Cắt tên sản phẩm nếu vượt quá maxLength và thêm dấu '...' ở cuối
+    }
+    return text;
   }
-  return text;
-}
   const handleAddToCart = async () => {
-    const form = {_id: product._id}
-    axios.post(apiweb + '/addtocart', form, {
+    const form = { _id: product._id }
+    axios.post(apiweb + '/cart/addtocart', form, {
       headers: {
-            'token': await AsyncStorage.getItem('token')
-          }
+        'token': await AsyncStorage.getItem('token')
+      }
     }).then(() => {
       Alert.alert('Thêm vào giỏ hàng thành công')
     })
@@ -31,15 +31,15 @@ export default ProductDetail = ({ navigation, route }) => {
     // Hiển thị modal khi ấn nút "Mua hàng"
     setModalVisible(true);
   };
-  const handleBuy = async () => { 
+  const handleBuy = async () => {
     const form = {
       _id: product._id,
       price: product.price,
       quantity: quantity
     }
-    await axios.post(apiweb + '/payoneproduct', form, {
+    await axios.post(apiweb + '/order/payoneproduct', form, {
       headers: {
-            'token': await AsyncStorage.getItem('token')
+        'token': await AsyncStorage.getItem('token')
       }
     }).then(() => {
       Alert.alert('Mua hàng thành công')
@@ -66,10 +66,10 @@ export default ProductDetail = ({ navigation, route }) => {
         style={styles.headerBackButton}
         onPress={() => navigation.goBack()}
       >
-        <AntDesign name="arrowleft" size={24} color="black" />
+        <AntDesign name="arrowleft" size={30} color="black" />
       </TouchableOpacity>
       <ScrollView style={styles.content}>
-        <Image source={{ uri: `data:${product.image.contentType};base64,${product.image.data}` }} style={styles.productImage} />
+        <Image source={{ uri: `${img}/${product.image.replace(/\\/g, '/')}` }} style={styles.productImage} />
         <View style={styles.productInfo}>
           <Text style={styles.productName}>{product.name}</Text>
           <Text style={styles.productPrice}>{product.price}đ</Text>
@@ -79,14 +79,14 @@ export default ProductDetail = ({ navigation, route }) => {
         </View>
       </ScrollView>
       <View style={styles.buttonContainer}>
-  
-  <TouchableOpacity style={[styles.button, styles.addToCartButton]} onPress={handleAddToCart}>
-    <Text style={[styles.buttonText, styles.addToCartButtonText]}>Thêm vào giỏ hàng</Text>
+
+        <TouchableOpacity style={[styles.button, styles.addToCartButton]} onPress={handleAddToCart}>
+          <Text style={[styles.buttonText, styles.addToCartButtonText]}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.buyNowButton]} onPress={handleBuyNow}>
-    <Text style={[styles.buttonText, styles.buyNowButtonText]}>Mua ngay</Text>
-  </TouchableOpacity>
-</View>
+          <Text style={[styles.buttonText, styles.buyNowButtonText]}>Mua ngay</Text>
+        </TouchableOpacity>
+      </View>
       {/* Modal để chọn số lượng sản phẩm */}
       <Modal animationType="slide" transparent={true} visible={isModalVisible}>
         <View style={styles.modalContainer}>
@@ -100,7 +100,7 @@ export default ProductDetail = ({ navigation, route }) => {
                 <Text style={styles.modalTitle}>{truncateText(product.name, 100)}</Text>
                 <Text style={styles.modalPrice}>Giá: {product.price}đ</Text>
               </View>
-            </View> 
+            </View>
             <View style={styles.quantityContainer}>
               <TouchableOpacity style={styles.quantityButton} onPress={decreaseQuantity}>
                 <Text>-</Text>
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 10,
     alignItems: 'center',
-    
+
   },
   modalTitle: {
     fontSize: 18,

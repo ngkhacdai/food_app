@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button, Alert } from 'react-native';
-import {local} from '../api/index'
+import { apiweb } from '../api/index'
 
 const RegisterScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -12,9 +12,9 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleRegister = () => {
     const form = {
-      username,email,password,address,phone
+      username, email, password, address, phone
     }
-    axios.post(local + '/signup', form).then((res) => {
+    axios.post(apiweb + '/access/signup', form).then((res) => {
       if (res.data.status === 200) {
         Alert.alert('Đăng ký thành công')
       } else {

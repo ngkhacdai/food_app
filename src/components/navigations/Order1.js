@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, FlatList, Text, Image, StyleSheet ,TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import { apiweb, local } from "../../api/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default Order1 = ({navigation}) => {
+export default Order1 = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [order, setOrder] = useState([]);
   const [isLoading, setLoading] = useState(true)
@@ -13,7 +13,7 @@ export default Order1 = ({navigation}) => {
   useEffect(() => {
     async function getData() {
       try {
-        const response = await axios.get(apiweb + '/getallorderbyuser', {
+        const response = await axios.get(apiweb + '/order/getallorderbyuser', {
           headers: {
             'token': await AsyncStorage.getItem('token')
           }
@@ -37,7 +37,7 @@ export default Order1 = ({navigation}) => {
   }, [data]);
   if (isLoading) {
     return (
-      <Text style={{margin: 20,alignItems: "center"}}>IsLoading...</Text>
+      <Text style={{ margin: 20, alignItems: "center" }}>IsLoading...</Text>
     )
   }
   return (
@@ -51,15 +51,15 @@ export default Order1 = ({navigation}) => {
               navigation.navigate("OrderDetail", { order: item });
             }}
           >
-          <View style={styles.orderItem}>
-            <View style={styles.orderInfo}>
-              <Text style={styles.productName}>{item._id}</Text>
-              <Text >Số lượng sản phẩm: {item.products.length}</Text>
-              <Text>Tổng cộng: {item.totalPrice}đ</Text>
-              <Text>Trạng thái đơn hàng: {item.status}</Text>
-              <Text>Ngày mua: {item.orderDate}</Text>
+            <View style={styles.orderItem}>
+              <View style={styles.orderInfo}>
+                <Text style={styles.productName}>{item._id}</Text>
+                <Text >Số lượng sản phẩm: {item.products.length}</Text>
+                <Text>Tổng cộng: {item.totalPrice}đ</Text>
+                <Text>Trạng thái đơn hàng: {item.status}</Text>
+                <Text>Ngày mua: {item.orderDate}</Text>
+              </View>
             </View>
-          </View>
           </TouchableOpacity>
         )}
       />
