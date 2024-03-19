@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Text, Image, TouchableOpacity, StyleSheet, Modal, Alert } from 'react-native';
-import { AntDesign } from '@expo/vector-icons'; // Sử dụng icon Back
+import { AntDesign } from '@expo/vector-icons';
 import { apiweb, img } from '../api/index';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default ProductDetail = ({ navigation, route }) => {
   const { product } = route.params;
-  const [isModalVisible, setModalVisible] = useState(false); // Sử dụng state để quản lý hiển thị modal
+  const [isModalVisible, setModalVisible] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
   function truncateText(text, maxLength) {
     if (text.length > maxLength) {
-      return text.slice(0, maxLength) + '...'; // Cắt tên sản phẩm nếu vượt quá maxLength và thêm dấu '...' ở cuối
+      return text.slice(0, maxLength) + '...';
     }
     return text;
   }
@@ -28,7 +28,6 @@ export default ProductDetail = ({ navigation, route }) => {
   };
 
   const handleBuyNow = () => {
-    // Hiển thị modal khi ấn nút "Mua hàng"
     setModalVisible(true);
   };
   const handleBuy = async () => {
@@ -46,7 +45,6 @@ export default ProductDetail = ({ navigation, route }) => {
     })
   }
   const closeModal = () => {
-    // Đóng modal
     setModalVisible(false);
   };
 
@@ -87,7 +85,6 @@ export default ProductDetail = ({ navigation, route }) => {
           <Text style={[styles.buttonText, styles.buyNowButtonText]}>Mua ngay</Text>
         </TouchableOpacity>
       </View>
-      {/* Modal để chọn số lượng sản phẩm */}
       <Modal animationType="slide" transparent={true} visible={isModalVisible}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>

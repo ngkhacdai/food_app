@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View, Text, FlatList, Button, StyleSheet, Image } from 'react-native';
-import { local, apiweb } from '../api/index';
+import { local, apiweb, img } from '../api/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Cart = ({ navigation }) => {
@@ -94,7 +94,7 @@ const Cart = ({ navigation }) => {
         renderItem={({ item }) => (
           <View style={styles.cartItem}>
             <Image
-              source={{ uri: `${apiweb}/${item.image}` }}
+              source={{ uri: `${img}/${item.product.image.replace(/\\/g, '/')}` }}
               style={styles.productImage}
             />
             <View style={styles.productInfo}>
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
+    paddingTop: 10
   },
   cartItem: {
     borderBottomWidth: 1,
